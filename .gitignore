@@ -1,0 +1,7 @@
+/node_modules
+/sessions
+/.vscode
+package-lock.json
+.env
+postmark.js
+testing.js

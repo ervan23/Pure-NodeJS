@@ -1,0 +1,170 @@
+<!--
+ * CoreUI - Open Source Bootstrap Admin Template
+ * @version v1.0.4
+ * @link http://coreui.io
+ * Copyright (c) 2017 creativeLabs Łukasz Holeczek
+ * @license MIT
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="CoreUI Bootstrap 4 Admin Template">
+  <meta name="author" content="Lukasz Holeczek">
+  <link rel="shortcut icon" href="http://coreui.io/demo/Ajax_Demo/img/favicon.png">
+  <meta name="keyword" content="CoreUI Bootstrap 4 Admin Template">
+  <!-- <link rel="shortcut icon" href="assets/ico/favicon.png"> -->
+
+  <title>.::Login Page::.</title>
+
+  <!-- Icons -->
+  <link href="http://coreui.io/demo/Ajax_Demo/vendors/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css">
+
+  <!-- Main styles for this application -->
+  <link href="http://coreui.io/demo/Ajax_Demo/css/style.css" rel="stylesheet">
+  <!-- Styles required by this views -->
+
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+  <!-- Styles required by this views -->
+
+</head>
+
+<body class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card-group">
+          <div class="card p-4">
+            <div class="card-body">
+              <h1 id="title-header">Login</h1>
+              <p class="text-muted" id="text-helper">Sign In to your account.</p>
+
+              <form id="f_login">
+                <div class="input-group mb-3">
+                    <span class="input-group-addon"><i class="icon-user"></i></span>
+                    <input type="email" name="txtEmail" class="form-control" placeholder="Username">
+                </div>
+                <div class="input-group mb-4">
+                    <span class="input-group-addon"><i class="icon-lock"></i></span>
+                    <input type="password" name="txtPassword" class="form-control" placeholder="Password">
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <button type="submit" class="btn btn-primary px-4">Login</button>
+                  </div>
+                  <div class="col-6 text-right">
+                    <button type="button" id="forgot_password" class="btn btn-link px-0">Forgot password?</button>
+                  </div>
+                </div>
+              </form>
+
+              <form id="f_forgot_password" style="display: none;">
+                <div class="input-group mb-3">
+                    <span class="input-group-addon"><i class="icon-user"></i></span>
+                    <input type="email" name="txtEmail" class="form-control" placeholder="Email">
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <button type="submit" class="btn btn-primary px-4">Forgot</button>
+                  </div>
+                  <div class="col-6 text-right">
+                    <button type="button" id="login" class="btn btn-link px-0">Back to Login</button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+          <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
+            <div class="card-body text-center">
+              <div>
+                <h2>Sign up</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <a href="/register" class="btn btn-primary active mt-3">Register Now!</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap and necessary plugins -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="http://coreui.io/demo/Ajax_Demo/vendors/js/bootstrap.min.js"></script>
+  <!--script src="node_modules/pace-progress/pace.min.js"></script-->
+
+  <!-- Plugins and scripts required by all views >
+  <script src="node_modules/chart.js/dist/Chart.min.js"></script-->
+
+  <script>
+    $('#forgot_password').click(function(){
+      $('#f_login').hide(50, function(){
+        $('#f_forgot_password').show(75);
+        document.title = '.::Forgot Password::.';
+        $('#title-header').text('Forgot Password');
+        $('#text-helper').text('Enter your registered email address.');
+      });
+    });
+
+    $('#login').click(function(){
+      $('#f_forgot_password').hide(50, function(){
+        $('#f_login').show(75);
+        document.title = '.::Login Page::.';
+        $('#title-header').text('Login');
+        $('#text-helper').text('Sign In to your account.');
+      });
+    });
+
+    $("#f_login").submit(function(e){
+        $.ajax({
+            url: "http://localhost:8080/login",
+            method: "post",
+            data: $(this).serialize(),
+            success: function(data){
+                console.log(data);
+                if(data.error == false){
+                    document.location.assign("http://localhost:8080");
+                }
+                else{
+                    alert(data.message);
+                }
+            },
+            error: function(err){
+                console.log(err);
+            }
+        });
+
+        e.preventDefault();
+    });
+
+    $("#f_forgot_password").submit(function(e){
+        $.ajax({
+            url: "http://localhost:8080/forgot_password",
+            method: "post",
+            data: $(this).serialize(),
+            success: function(data){
+                console.log(data);
+                if(data.error == false){
+                    alert(data.message);
+                }
+                else{
+                    alert(data.message);
+                }
+            },
+            error: function(err){
+                console.log(err);
+            }
+        });
+
+        e.preventDefault();
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,361 @@
+<div class="container">
+    <div class="row">
+        <div class="col col-12">
+
+            <div class="card">
+                <div class="card-header">
+                    List User
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUserModal">
+                        ADD
+                    </button>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Gender</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% users.result.forEach(function(user){ %>
+                            
+                            <tr>
+                                <td><%= user.name %></td>
+                                <td><%= user.email %></td>
+                                <td><%= user.phone %></td>
+                                <td><%= user.gender == 1 ? "Male" : "Female" %></td>
+                                <td align="center">
+                                    <label class="switch switch-3d switch-success">
+                                        <input data-action="change_user_status" data-id="<%= user.id %>" type="checkbox" class="switch-input" <%= user.status == 1 ? "checked":"" %>>
+                                        <span class="switch-label"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                </td>
+                                <td align="center">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" data-action="view_user" data-toggle="modal" data-target="#viewUserModal" data-id="<%= user.id %>" class="btn btn-primary btn-sm">View</button>
+                                        <button type="button" data-action="edit_user" data-toggle="modal" data-target="#editUserModal" data-id="<%= user.id %>" class="btn btn-secondary btn-sm">Edit</button>
+                                        <button type="button" data-action="delete_user" data-id="<%= user.id %>" class="btn btn-danger btn-sm">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <% }) %>
+                        </tbody>
+                    </table>
+
+                    <ul class="pagination float-right">
+                        <% for(var i = 1; i <= (users.current_page + users.total); i++){ %>
+                            <li class="page-item <%= i == users.current_page ? 'active':'' %>">
+                                <a href="http://localhost:8080/?page=<%= i %>" class="page-link"><%= i %></a>
+                            </li>
+                        <% } %>
+                    </ul>
+
+                </div><!-- .card-body -->
+            </div><!-- .card -->
+
+        </div><!-- .col col-12 -->    
+    </div><!-- .row -->
+</div><!-- .container -->
+
+<!-- Modal add user -->
+<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-primary" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Modal title</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form id="f_add_user" method="post" class="form-horizontal">
+            <div class="form-group row">
+                <label class="col-sm-4 form-control-label" for="txtName">Name</label>
+                <div class="col-sm-8">
+                    <input type="text" id="txtName" name="txtName" class="form-control form-control-sm" placeholder="Ervan Prastyanto">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 form-control-label" for="txtEmail">Email</label>
+                <div class="col-sm-8">
+                    <input type="email" id="txtEmail" name="txtEmail" class="form-control form-control-sm" placeholder="email@mail.com">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 form-control-label" for="txtPassword">Password</label>
+                <div class="col-sm-8">
+                    <input type="password" id="txtPassword" name="txtPassword" class="form-control form-control-sm" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 form-control-label" for="txtPhone">Phone</label>
+                <div class="col-sm-8">
+                    <input type="tel" id="txtPhone" name="txtPhone" class="form-control form-control-sm" placeholder="087xxxxxxxxxx">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 form-control-label" for="gender">Gender</label>
+                <div class="col-sm-8">
+                    <select id="gender" name="gender" class="form-control form-control-sm">
+                        <option value="1">Male</option>
+                        <option value="2">Female</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="save_user" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<!-- Modal detail user -->
+<div class="modal fade" id="viewUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-primary" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Modal title</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td data-user="name"></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td data-user="email"></td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td data-user="phone"></td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td data-user="gender"></td>
+                </tr>
+            </tbody>
+        </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<!-- Modal edit user -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-primary" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Modal title</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form id="f_edit_user" method="post" class="form-horizontal">
+            <input type="hidden" id="txtEditId" name="txtId">
+            <div class="form-group row">
+                <label class="col-sm-4 form-control-label" for="txtEditName">Name</label>
+                <div class="col-sm-8">
+                    <input type="text" id="txtEditName" name="txtName" class="form-control form-control-sm" placeholder="Ervan Prastyanto">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 form-control-label" for="txtEditEmail">Email</label>
+                <div class="col-sm-8">
+                    <input type="email" id="txtEditEmail" name="txtEmail" class="form-control form-control-sm" placeholder="email@mail.com">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 form-control-label" for="txtEditPhone">Phone</label>
+                <div class="col-sm-8">
+                    <input type="tel" id="txtEditPhone" name="txtPhone" class="form-control form-control-sm" placeholder="087xxxxxxxxxx">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 form-control-label" for="gender">Gender</label>
+                <div class="col-sm-8">
+                    <select id="gender" name="gender" class="form-control form-control-sm">
+                        <option value="1">Male</option>
+                        <option value="2">Female</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="edit_user" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<script type="text/javascript">
+    $("[data-action=edit_user]").click(function(){
+        var id = $(this).attr('data-id');
+        $.ajax({
+            url: "http://localhost:8080/user?id="+id,
+            method: 'get',
+            dataType: 'json',
+            success: function(data){
+                $("#txtEditId").val(data.user.id);
+                $("#txtEditName").val(data.user.name);
+                $("#txtEditEmail").val(data.user.email);
+                $("#txtEditPhone").val(data.user.phone);
+                //$("#viewUserModal").modal('show');
+            },
+            error: function(err){
+                console.log(err);
+                alert("Failed to get user.");
+            }
+        });
+    });
+
+    $("#edit_user").click(function(){
+        $("#f_edit_user").submit();
+    });
+
+    $("#f_edit_user").submit(function(e){
+        $.ajax({
+            url: "http://localhost:8080/user",
+            method: "put",
+            data: $(this).serialize(),
+            success: function(data){
+                console.log(data);
+                if(data.error == false){
+                    document.location.assign("http://localhost:8080");
+                }
+                else{
+                    alert(data.message);
+                }
+            },
+            error: function(err){
+                console.log(err);
+            }
+        });
+
+        e.preventDefault();
+    });
+
+    $("#save_user").click(function(){
+        $("#f_add_user").submit();
+    });
+
+    $("#f_add_user").submit(function(e){
+        $.ajax({
+            url: "http://localhost:8080/user",
+            method: "post",
+            data: $(this).serialize(),
+            success: function(data){
+                console.log(data);
+                if(data.error == false){
+                    document.location.assign("http://localhost:8080");
+                }
+                else{
+                    alert(data.message);
+                }
+            },
+            error: function(err){
+                console.log(err);
+            }
+        });
+
+        e.preventDefault();
+    });
+
+    $("[data-action=view_user]").click(function(){
+        var id = $(this).attr('data-id');
+        $.ajax({
+            url: "http://localhost:8080/user?id="+id,
+            method: 'get',
+            dataType: 'json',
+            success: function(data){
+                $("[data-user=name]").text(data.user.name);
+                $("[data-user=email]").text(data.user.email);
+                $("[data-user=phone]").text(data.user.phone);
+                $("[data-user=gender]").text(data.user.gender == '1' ? "Male":"Female");
+                //$("#viewUserModal").modal('show');
+            },
+            error: function(err){
+                console.log(err);
+                alert("Failed to get user.");
+            }
+        });
+    });
+
+    $("[data-action=delete_user]").click(function(){
+        var conf = confirm("Delete this user..?");
+        if(!conf) return false;
+
+        var id = $(this).attr('data-id');
+        $.ajax({
+            url: "http://localhost:8080/user?id="+id,
+            method: 'delete',
+            dataType: 'json',
+            success: function(data){
+                if(data.error == false){
+                    document.location.assign("http://localhost:8080");
+                }
+                else{
+                    alert(data.message);
+                }
+            },
+            error: function(err){
+                console.log(err);
+                alert("Failed to get user.");
+            }
+        });
+    });
+
+    $("[data-action=change_user_status]").click(function(){
+        var conf = confirm("Update this user status..?");
+        if(!conf) return false;
+
+        var status;
+        status = $(this).is(":checked") ? 1:0;
+        var id = $(this).attr("data-id");
+
+        $.ajax({
+            url: "http://localhost:8080/user/change_status",
+            method: "put",
+            data: {status: status, id: id},
+            success: function(data){
+                
+            },
+            error: function(err){
+                console.log(err);
+            }
+        });
+    });
+</script>
+
